@@ -12,27 +12,35 @@ def generate_ip_addresses(user_input):
             range_octet = i
             break
     
-    if range_octet is None:
-        print("Invalid input. No range found in the IP address.")
-        return
-    
-    # Extract the range from the octet
-    start, end = map(int, octets[range_octet].split('-'))
-    
-    # Generate the IP addresses
     ip_addresses = []
-    for i in range(start, end + 1):
-        octets[range_octet] = str(i)
-        ip_address = '.'.join(octets)
+
+    if range_octet:
         
-        # Validate the IP address
+        # Extract the range from the octet
+        start, end = map(int, octets[range_octet].split('-'))
+        
+        # Generate the IP addresses
+        for i in range(start, end + 1):
+            octets[range_octet] = str(i)
+            ip_address = '.'.join(octets)
+            
+            # Validate the IP address
+            try:
+                ipaddress.ip_address(ip_address)
+                ip_addresses.append(ip_address)
+            except ValueError:
+                print(f"Invalid IP address: {ip_address}")
+
+    else:
+        ip_address = '.'.join(octets)
         try:
             ipaddress.ip_address(ip_address)
             ip_addresses.append(ip_address)
         except ValueError:
             print(f"Invalid IP address: {ip_address}")
-    
+
     return ip_addresses
+
 
 def deal_with_commas(user_input):
     # Split user input into octets
